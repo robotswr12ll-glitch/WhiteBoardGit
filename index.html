@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git & GitHub Whiteboard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Fira+Code:wght@400;500&display=swap">
+<style>
+:root{
+  --board:#fbfbf8; --ink:#23262b; --muted:#5d636b; --line:#c9ccd1;
+  --blue:#2457d6; --red:#d3372a; --green:#1b8f4e; --hl:#fff1a8;
+  --hand:'Patrick Hand','Comic Sans MS','Segoe Print',cursive;
+  --code:'Fira Code',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:#8b8f96; color:var(--ink); font-family:var(--hand); font-size:19px; line-height:1.45;
+  padding:18px;
+}
+.board{
+  max-width:1000px; margin:0 auto; background:var(--board);
+  background-image:radial-gradient(#dcdde0 1px,transparent 1.2px); background-size:22px 22px;
+  border:10px solid #d5d7db; border-radius:10px; padding:22px 22px 26px;
+  box-shadow:0 2px 0 #aeb1b7, 0 10px 30px rgba(0,0,0,.25);
+}
+h1{font-size:2rem; margin:0 0 2px; font-weight:400}
+h1 span{background:linear-gradient(transparent 55%,var(--hl) 55%)}
+.sub{color:var(--muted); margin:0 0 18px}
+.zones{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.zone{border:2.5px dashed var(--line); border-radius:18px; padding:12px 14px 16px; position:relative}
+.zone h2{margin:0 0 10px; font-size:1.2rem; font-weight:400; display:flex; align-items:center; gap:8px}
+.zone.pc h2{color:var(--blue)} .zone.cloud h2{color:var(--green)}
+.zone h2 svg{width:24px;height:24px}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(112px,1fr)); gap:12px}
+.tile{
+  font:inherit; color:var(--ink); background:#fff; cursor:pointer;
+  border:2.5px solid var(--ink); border-radius:255px 14px 225px 14px/14px 225px 14px 255px;
+  padding:10px 6px 8px; display:flex; flex-direction:column; align-items:center; gap:4px;
+  transition:transform .12s, background .12s, box-shadow .12s;
+}
+.tile:nth-child(odd){transform:rotate(-1.2deg)} .tile:nth-child(even){transform:rotate(1deg)}
+.tile:hover{transform:rotate(0) translateY(-2px); box-shadow:3px 4px 0 var(--ink)}
+.tile:focus-visible{outline:3px solid var(--blue); outline-offset:3px}
+.tile svg{width:34px;height:34px}
+.tile[aria-pressed="true"]{background:var(--hl); transform:rotate(0) scale(1.04); box-shadow:3px 4px 0 var(--ink)}
+.zone.pc .tile svg{color:var(--blue)} .zone.cloud .tile svg{color:var(--green)} .zone.tools .tile svg{color:var(--red)}
+.zone.tools{margin-top:18px}
+.zone.tools .grid{grid-template-columns:repeat(auto-fill,minmax(112px,150px))}
+.flow{display:flex; justify-content:center; align-items:center; gap:10px; margin:14px 0 2px; color:var(--muted); font-size:.95rem; flex-wrap:wrap}
+.flow b{font-weight:400; color:var(--ink); border-bottom:2.5px solid var(--hl)}
+.panel{
+  margin-top:18px; background:#fff; border:3px solid var(--ink); border-radius:16px 22px 14px 24px;
+  padding:16px 18px; min-height:150px; display:grid; grid-template-columns:70px 1fr; gap:14px;
+  box-shadow:5px 6px 0 rgba(35,38,43,.85);
+}
+.panel .big{width:64px;height:64px}
+.panel h3{margin:0 0 4px; font-size:1.6rem; font-weight:400}
+.panel p{margin:0 0 8px; max-width:62ch}
+.panel .say{color:var(--muted)}
+.panel code{
+  display:block; font-family:var(--code); font-size:.82rem; background:#f1f2f4; border:1.5px solid #d6d8dc;
+  border-radius:8px; padding:8px 10px; margin-top:6px; white-space:pre-wrap; overflow-x:auto;
+}
+.panel.empty{display:block; color:var(--muted); text-align:center; padding-top:44px}
+.panel.pop{animation:pop .22s ease-out}
+@keyframes pop{from{transform:scale(.985); opacity:.6} to{transform:none; opacity:1}}
+@media (max-width:720px){
+  body{padding:8px; font-size:18px}
+  .board{padding:14px 12px 18px; border-width:7px}
+  .zones{grid-template-columns:1fr}
+  .panel{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.tile,.panel.pop{transition:none; animation:none}}
+</style>
+</head>
+<body>
+<main class="board">
+  <h1><span>Git &amp; GitHub</span> whiteboard</h1>
+  <p class="sub">Tap any box and it explains itself.</p>
+
+  <div class="zones">
+    <section class="zone pc" aria-labelledby="zpc">
+      <h2 id="zpc"><span data-ico="laptop"></span>On your computer</h2>
+      <div class="grid" data-zone="pc"></div>
+    </section>
+    <section class="zone cloud" aria-labelledby="zcl">
+      <h2 id="zcl"><span data-ico="cloud"></span>On GitHub (the cloud)</h2>
+      <div class="grid" data-zone="cloud"></div>
+    </section>
+  </div>
+
+  <div class="flow" aria-hidden="true">
+    <span>clone</span><b>GitHub &rarr; your computer</b><span>·</span>
+    <span>push</span><b>your computer &rarr; GitHub</b><span>·</span>
+    <span>fork</span><b>their GitHub &rarr; your GitHub</b>
+  </div>
+
+  <section class="zone tools" aria-labelledby="ztl">
+    <h2 id="ztl" style="color:var(--red)"><span data-ico="wrench"></span>Handy extras</h2>
+    <div class="grid" data-zone="tools"></div>
+  </section>
+
+  <div class="panel empty" id="panel" aria-live="polite">Pick a box above. Try <b>Fork</b>.</div>
+</main>
+
+<script>
+var S='<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+var ICON={
+  folder:S+'<path d="M5 12h14l4 5h20v22H5z"/></svg>',
+  init:S+'<path d="M26 5L11 27h11l-2 16 17-23H26z"/></svg>',
+  git:S+'<circle cx="14" cy="10" r="4"/><circle cx="14" cy="38" r="4"/><circle cx="35" cy="20" r="4"/><path d="M14 14v20M35 24c0 8-10 6-19 12"/></svg>',
+  repo:S+'<path d="M10 6h26v36H10z"/><path d="M10 34h26M17 14h12M17 21h12"/></svg>',
+  add:S+'<rect x="6" y="6" width="36" height="36" rx="6"/><path d="M24 14v20M14 24h20"/></svg>',
+  commit:S+'<circle cx="24" cy="24" r="8"/><path d="M4 24h12M32 24h12"/></svg>',
+  clone:S+'<path d="M24 6v24M14 21l10 10 10-10M8 40h32"/></svg>',
+  push:S+'<path d="M24 34V10M14 19l10-10 10 10M8 41h32"/></svg>',
+  pull:S+'<path d="M24 8v26M14 25l10 10 10-10M8 42h32"/></svg>',
+  github:S+'<path d="M14 36a9 9 0 010-18 11 11 0 0121-2 8 8 0 011 20z"/></svg>',
+  fork:S+'<circle cx="12" cy="9" r="4"/><circle cx="36" cy="9" r="4"/><circle cx="24" cy="39" r="4"/><path d="M12 13v6c0 4 3 6 6 6h12c3 0 6-2 6-6v-6M24 25v10"/></svg>',
+  pr:S+'<circle cx="12" cy="10" r="4"/><circle cx="12" cy="38" r="4"/><circle cx="36" cy="38" r="4"/><path d="M12 14v20M36 34V20c0-4-3-6-6-6h-6M28 8l-5 6 5 6"/></svg>',
+  pages:S+'<circle cx="24" cy="24" r="18"/><path d="M6 24h36M24 6c-8 9-8 27 0 36M24 6c8 9 8 27 0 36"/></svg>',
+  npm:S+'<path d="M24 5l17 9v20l-17 9-17-9V14z"/><path d="M7 14l17 9 17-9M24 23v20"/></svg>',
+  terminal:S+'<rect x="5" y="8" width="38" height="32" rx="5"/><path d="M13 19l7 6-7 6M25 32h10"/></svg>',
+  laptop:S+'<rect x="9" y="10" width="30" height="21" rx="3"/><path d="M4 38h40"/></svg>',
+  cloud:S+'<path d="M14 36a9 9 0 010-18 11 11 0 0121-2 8 8 0 011 20z"/></svg>',
+  wrench:S+'<path d="M32 8a9 9 0 00-8 12L8 36a4 4 0 006 6l16-16a9 9 0 0012-8l-6 5-5-1-1-5z"/></svg>'
+};
+
+var ITEMS=[
+ {id:'dir',zone:'pc',ico:'folder',t:'Directory',
+  say:'Just a fancy word for a folder.',
+  more:'"Project directory" means "project folder". On Windows, typing dir in the terminal lists what is inside the folder you are in (Mac/Linux: ls).',
+  cmd:'mkdir my-site   # make a folder\ncd my-site      # go inside it\ndir             # list files (ls on Mac/Linux)'},
+ {id:'init',zone:'pc',ico:'init',t:'Init',
+  say:'"Initialize" = set something up for the first time.',
+  more:'It shows up in many tools. git init starts tracking a folder. npm init creates a package.json. /init in Kimi scans your project and writes an AGENTS.md notes file.',
+  cmd:'git init'},
+ {id:'git',zone:'pc',ico:'git',t:'Git',
+  say:'A save-point system for your code.',
+  more:'Git lives on your computer and remembers every snapshot you save. Broke something? Go back to a snapshot that worked.',
+  cmd:'git log --oneline   # see your past snapshots'},
+ {id:'add',zone:'pc',ico:'add',t:'Add',
+  say:'Pick which changes go in the next snapshot.',
+  more:'Think of it as putting files in a box before you seal it. The dot means "everything that changed".',
+  cmd:'git add .'},
+ {id:'commit',zone:'pc',ico:'commit',t:'Commit',
+  say:'Seal the box and label it. That is one save point.',
+  more:'Commit every time something works. The message is a note to future you. To throw away unsaved changes and go back to your last commit, use git restore . (careful, that deletes them for good).',
+  cmd:'git commit -m "habit tracker works"'},
+ {id:'clone',zone:'pc',ico:'clone',t:'Clone',
+  say:'Download a copy of a GitHub project to your computer.',
+  more:'You get all the files plus their full history. It is still linked to the original, so you usually cannot push changes back unless you own it or have permission.',
+  cmd:'git clone https://github.com/someone/cool-project.git'},
+ {id:'github',zone:'cloud',ico:'github',t:'GitHub',
+  say:'A website that stores git projects online.',
+  more:'Git is the save system on your computer. GitHub is the cloud copy: backed up, shareable, and home to most open-source projects. Like Google Drive, but with history.',
+  cmd:'github.com'},
+ {id:'repo',zone:'cloud',ico:'repo',t:'Repo',
+  say:'Short for repository: a project folder git is tracking.',
+  more:'It holds your files plus all their history. You will hear "my repo", "clone the repo", "this repo has a bug". It can live on your computer, on GitHub, or both.',
+  cmd:''},
+ {id:'fork',zone:'cloud',ico:'fork',t:'Fork',
+  say:'Make your own copy of someone else\u2019s repo, on GitHub.',
+  more:'Press the Fork button on their repo page and a copy appears under your account. Now you can change anything without asking. Usual flow: fork it, clone your fork, edit, commit, push, and optionally open a pull request.',
+  cmd:'fork (button on GitHub)  \u2192  git clone <your fork>'},
+ {id:'push',zone:'cloud',ico:'push',t:'Push',
+  say:'Send your commits up to GitHub.',
+  more:'Your commits stay on your computer until you push them. After a push, the GitHub copy matches yours.',
+  cmd:'git push'},
+ {id:'pull',zone:'cloud',ico:'pull',t:'Pull',
+  say:'Bring new changes down from GitHub.',
+  more:'Handy when you work from two computers, or someone else changed the repo.',
+  cmd:'git pull'},
+ {id:'pr',zone:'cloud',ico:'pr',t:'Pull request',
+  say:'"Please add my changes to your project."',
+  more:'After you fork and push, a pull request (PR) asks the original owner to merge your work in. They can review it, comment, and accept or decline.',
+  cmd:''},
+ {id:'pages',zone:'cloud',ico:'pages',t:'GitHub Pages',
+  say:'Free hosting for static sites.',
+  more:'Push your index.html to a repo, switch on Pages in the repo settings, and your site gets a public link.',
+  cmd:'Repo \u2192 Settings \u2192 Pages'},
+ {id:'npm',zone:'tools',ico:'npm',t:'npm',
+  say:'A package manager for JavaScript.',
+  more:'It downloads code other people wrote (packages) into your project. It comes with Node.js. You do not need it for plain static HTML files. It shows up once you use React or build tools.',
+  cmd:'npm install something\nnpm run dev'},
+ {id:'term',zone:'tools',ico:'terminal',t:'Terminal',
+  say:'Where you type commands instead of clicking.',
+  more:'All the commands on this board (git, npm, cd, dir) are typed here. Kimi Code runs in one too.',
+  cmd:'cd ..   # go up one folder'}
+];
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+document.querySelectorAll('[data-ico]').forEach(function(el){
+  el.innerHTML=ICON[el.getAttribute('data-ico')];
+  el.firstChild.style.cssText='width:24px;height:24px;vertical-align:middle';
+});
+
+var panel=document.getElementById('panel'), tiles=[];
+ITEMS.forEach(function(it){
+  var b=document.createElement('button');
+  b.className='tile'; b.type='button'; b.setAttribute('aria-pressed','false');
+  b.innerHTML=ICON[it.ico]+'<span>'+esc(it.t)+'</span>';
+  b.addEventListener('click',function(){show(it,b)});
+  document.querySelector('[data-zone="'+it.zone+'"]').appendChild(b);
+  tiles.push(b);
+});
+
+function show(it,btn){
+  tiles.forEach(function(t){t.setAttribute('aria-pressed','false')});
+  btn.setAttribute('aria-pressed','true');
+  var color=it.zone==='pc'?'var(--blue)':it.zone==='cloud'?'var(--green)':'var(--red)';
+  panel.className='panel';
+  panel.innerHTML='<div style="color:'+color+'">'+ICON[it.ico].replace('<svg','<svg class="big"')+'</div>'+
+    '<div><h3>'+esc(it.t)+'</h3><p><b style="font-weight:400;background:var(--hl)">'+esc(it.say)+'</b></p><p class="say">'+esc(it.more)+'</p>'+
+    (it.cmd?'<code>'+esc(it.cmd)+'</code>':'')+'</div>';
+  void panel.offsetWidth; panel.classList.add('pop');
+  if(window.matchMedia('(max-width:720px)').matches){panel.scrollIntoView({behavior:'smooth',block:'nearest'})}
+}
+</script>
+</body>
+</html>
